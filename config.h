@@ -38,6 +38,7 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
   { "Nitrogen", NULL,       NULL,       0,            1,           -1 },
   { NULL,       NULL,       "win0",     0,            1,           -1 },
+  { NULL,       NULL,       "Programmer's Manual", 0, 1,           -1 },
 };
 
 /* layout(s) */
@@ -121,6 +122,7 @@ static Key keys[] = {
   { MODKEY,                       XF86XK_AudioStop, spawn,   SHCMD("playerctl -p mpd stop") },
   { MODKEY,                       XF86XK_AudioNext, spawn,   SHCMD("playerctl -p mpd next") },
   { MODKEY,                       XF86XK_AudioPrev, spawn,   SHCMD("playerctl -p mpd previous") },
+  { MODKEY,                       XK_s,      spawn,          SHCMD("programmers_manual.sh") },
 };
 
 /* button definitions */
