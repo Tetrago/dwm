@@ -123,7 +123,6 @@ static Key keys[] = {
   { MODKEY,                       XF86XK_AudioStop, spawn,   SHCMD("playerctl -p mpd stop") },
   { MODKEY,                       XF86XK_AudioNext, spawn,   SHCMD("playerctl -p mpd next") },
   { MODKEY,                       XF86XK_AudioPrev, spawn,   SHCMD("playerctl -p mpd previous") },
-  { MODKEY,                       XK_s,      spawn,          SHCMD("programmers_manual.sh") },
 };
 
 /* button definitions */
