@@ -217,6 +217,7 @@ static void grabkeys(void);
 static void incnmaster(const Arg *arg);
 static void keypress(XEvent *e);
 static void killclient(const Arg *arg);
+static void losefullscreen(Client *sel, Client *next);
 static void manage(Window w, XWindowAttributes *wa);
 static void mappingnotify(XEvent *e);
 static void maprequest(XEvent *e);
@@ -840,7 +841,7 @@ drawbar(Monitor *m)
     stw = getsystraywidth();
 
 	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
+	if (m == selmon || 1) { /* status is only drawn on selected monitor */
 		drw_setscheme(drw, scheme[SchemeNorm]);
 		tw = TEXTW(stext) - lrpad / 2 + 2; /* 2px extra right padding */
 		drw_text(drw, m->ww - tw - stw, 0, tw, bh, 0, stext, 0);
@@ -1004,6 +1005,7 @@ focusstack(const Arg *arg)
 					c = i;
 	}
 	if (c) {
+		losefullscreen(selmon->sel, c);
 		focus(c);
 		restack(selmon);
 	}
@@ -1186,6 +1188,15 @@ killclient(const Arg *arg)
 }
 
 void
+losefullscreen(Client *sel, Client *next)
+{
+	if (!sel || !next)
+		return;
+	if (sel->isfullscreen && ISVISIBLE(sel) && sel->mon == next->mon && !next->isfloating)
+		setfullscreen(sel, 0);
+}
+
+void
 manage(Window w, XWindowAttributes *wa)
 {
 	Client *c, *t = NULL;
@@ -1239,8 +1250,10 @@ manage(Window w, XWindowAttributes *wa)
 		(unsigned char *) &(c->win), 1);
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
 	setclientstate(c, NormalState);
-	if (c->mon == selmon)
+	if (c->mon == selmon) {
+		losefullscreen(selmon->sel, c);
 		unfocus(selmon->sel, 0);
+	}
 	c->mon->sel = c;
 	arrange(c->mon);
 	XMapWindow(dpy, c->win);
@@ -2367,9 +2380,11 @@ updatesizehints(Client *c)
 void
 updatestatus(void)
 {
+  Monitor *m;
 	if (!gettextprop(root, XA_WM_NAME, stext, sizeof(stext)))
 		strcpy(stext, "dwm-"VERSION);
-	drawbar(selmon);
+  for(m = mons; m; m = m->next)
+    drawbar(m);
 	updatesystray();
 }
 

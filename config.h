@@ -39,6 +39,7 @@ static const Rule rules[] = {
   { "Nitrogen", NULL,       NULL,       0,            1,           -1 },
   { NULL,       NULL,       "win0",     0,            1,           -1 },
   { NULL,       NULL,       "Programmer's Manual", 0, 1,           -1 },
+  { NULL,       NULL,       "zoom",     0,            1,           -1 },
 };
 
 /* layout(s) */
